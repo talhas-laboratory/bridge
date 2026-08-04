@@ -49,6 +49,10 @@ The default compiler is deterministic: rank by lock/salience, enforce budgets,
 skip high stereotype-risk fills, and report coverage/openness. Hosts may swap
 the compiler through `AdapterRegistry.packet_compiler`.
 
+Research grounding for the sparse → rich → over-specified continuum, and how it
+maps onto recipe/compiler choices, lives in
+[`docs/context-packet-research-grounding.md`](docs/context-packet-research-grounding.md).
+
 ```bash
 PYTHONPATH=src python examples/context_packet.py
 ```
