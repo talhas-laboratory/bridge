@@ -4,10 +4,11 @@ Reasoning Bridge is a small, adapter-first control plane for turning a request
 into an inspectable execution plan. It does not require a model provider,
 vector store, network service, database, or host application.
 
-The core owns contracts, behavior matching, policy enforcement, deterministic
-routing, context-packet recipes/compilation, traces, and execution plans. Hosts
-provide optional adapters for classification, context, facets, packet
-compilation, state, execution, learning, and telemetry.
+The **core** owns contracts, behavior matching, policy enforcement, deterministic
+routing, traces, execution plans, and a generic plan-extension hook. Hosts
+provide optional adapters for classification, context, execution, learning, and
+telemetry. Domain capabilities such as context-packet assembly are optional
+extensions, not core responsibilities.
 
 ```python
 from reasoning_bridge import BehaviorSpec, BridgeRequest, BridgeRuntime
@@ -36,21 +37,48 @@ Run the dependency-free test suite with:
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-## Context packets
+## Extensions
 
-Packet infrastructure is recipe-driven and compiler-based:
+`BridgeRuntime(..., extensions=[...])` accepts modular `PlanExtension`
+implementations. Each extension may attach named artifacts onto
+`ActiveField.extensions`, plus warnings and trace events. The core never imports
+a specific domain extension.
 
-1. Register a `PacketRecipe` with typed slots (`frame`, `constraints`, …).
-2. Provide `FacetMaterial` values via a facet provider and/or role-tagged context items.
-3. When policy allows context, the runtime selects a recipe and compiles a
-   `ContextPacket` onto `ActiveField.context_packet`.
+### Context packets (optional)
 
-The default compiler is deterministic: rank by lock/salience, enforce budgets,
-skip high stereotype-risk fills, and report coverage/openness. Hosts may swap
-the compiler through `AdapterRegistry.packet_compiler`.
+Packet assembly lives under `reasoning_bridge.extensions.packet` and is enabled
+only when you register `ContextPacketExtension`:
 
-Research grounding for the sparse → rich → over-specified continuum, and how it
-maps onto recipe/compiler choices, lives in
+```python
+from reasoning_bridge import BridgeRequest, BridgeRuntime, ContextPolicy
+from reasoning_bridge.extensions.packet import (
+    CONTEXT_PACKET_ATTACHMENT,
+    ContextPacketExtension,
+    PacketRecipe,
+    PacketSlotSpec,
+)
+
+runtime = BridgeRuntime(
+    extensions=[
+        ContextPacketExtension(
+            recipes=[
+                PacketRecipe(
+                    recipe_id="implementation_steering",
+                    selection_signals=frozenset({"goal:build"}),
+                    slots=(
+                        PacketSlotSpec("frame", required=True, max_characters=120),
+                        PacketSlotSpec("constraints", required=True, max_characters=120),
+                    ),
+                )
+            ]
+        )
+    ]
+)
+```
+
+Compiled packets appear at `result.plan.field.extensions[CONTEXT_PACKET_ATTACHMENT]`.
+
+Research grounding for the sparse → rich → over-specified continuum lives in
 [`docs/context-packet-research-grounding.md`](docs/context-packet-research-grounding.md).
 
 ```bash
@@ -63,6 +91,8 @@ PYTHONPATH=src python examples/context_packet.py
 - Public records serialize to JSON-compatible dictionaries.
 - No adapter calls occur unless explicitly registered and permitted by policy.
 - Routing remains deterministic in the absence of optional intelligence.
-- Adapter failures are returned as structured warnings rather than hidden fallbacks.
+- Adapter and extension failures are returned as structured warnings rather than
+  hidden fallbacks.
+- Domain features should be extensions; the core stays multi-function.
 
 The schema files under `schemas/v1/` are the language-neutral protocol surface.

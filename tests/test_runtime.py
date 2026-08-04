@@ -11,9 +11,13 @@ from reasoning_bridge import (
     Classification,
     ContextItem,
     ContextPolicy,
+    InMemoryContextProvider,
+)
+from reasoning_bridge.extensions.packet import (
+    CONTEXT_PACKET_ATTACHMENT,
+    ContextPacketExtension,
     DefaultPacketCompiler,
     FacetMaterial,
-    InMemoryContextProvider,
     InMemoryFacetProvider,
     PacketRecipe,
     PacketSlotSpec,
@@ -48,7 +52,7 @@ class RuntimeTestCase(unittest.TestCase):
         self.assertEqual(result.status, "planned")
         self.assertEqual(result.plan.route.route_id, "default")
         self.assertEqual(result.plan.field.context, ())
-        self.assertIsNone(result.plan.field.context_packet)
+        self.assertEqual(result.plan.field.extensions, {})
         json.dumps(result.to_dict())
 
     def test_override_beats_bias_and_preserves_generic_biases(self) -> None:
@@ -101,6 +105,15 @@ class RuntimeTestCase(unittest.TestCase):
         self.assertEqual(result.status, "failed")
         self.assertIn("execution_denied_by_policy", result.warnings)
 
+    def test_core_runtime_module_does_not_import_packet_extension(self) -> None:
+        import reasoning_bridge.runtime as runtime_module
+        from pathlib import Path
+
+        source = Path(runtime_module.__file__).read_text(encoding="utf-8")
+        self.assertNotIn("extensions.packet", source)
+        self.assertNotIn("ContextPacket", source)
+        self.assertNotIn("PacketRecipe", source)
+
 
 class PacketInfrastructureTestCase(unittest.TestCase):
     def test_recipe_registry_selects_by_signal_and_explicit_id(self) -> None:
@@ -135,7 +148,7 @@ class PacketInfrastructureTestCase(unittest.TestCase):
         self.assertIn("prefer realistic competence over caricature", " ".join(packet.open_variables))
         json.dumps(packet.to_dict())
 
-    def test_runtime_compiles_packet_from_facets_when_recipe_matches(self) -> None:
+    def test_runtime_compiles_packet_from_facets_when_extension_enabled(self) -> None:
         facets = InMemoryFacetProvider(
             (
                 FacetMaterial("frame-1", "Build a small next slice.", "frame", "locked", provenance="facet:frame"),
@@ -143,11 +156,15 @@ class PacketInfrastructureTestCase(unittest.TestCase):
             )
         )
         runtime = BridgeRuntime(
-            recipes=[_steering_recipe()],
-            adapters=AdapterRegistry(facet_provider=facets),
+            extensions=[
+                ContextPacketExtension(
+                    recipes=[_steering_recipe()],
+                    facet_provider=facets,
+                )
+            ]
         )
         denied = runtime.plan(BridgeRequest("request-8", "Build an adapter."))
-        self.assertIsNone(denied.plan.field.context_packet)
+        self.assertNotIn(CONTEXT_PACKET_ATTACHMENT, denied.plan.field.extensions)
         self.assertEqual(facets.calls, [])
 
         allowed = runtime.plan(
@@ -157,7 +174,7 @@ class PacketInfrastructureTestCase(unittest.TestCase):
                 policy=ContextPolicy(allow_context=True, max_characters=300),
             )
         )
-        packet = allowed.plan.field.context_packet
+        packet = allowed.plan.field.extensions.get(CONTEXT_PACKET_ATTACHMENT)
         self.assertIsNotNone(packet)
         assert packet is not None
         self.assertEqual(packet.recipe_id, "implementation_steering")
@@ -173,8 +190,8 @@ class PacketInfrastructureTestCase(unittest.TestCase):
             )
         )
         runtime = BridgeRuntime(
-            recipes=[_steering_recipe()],
             adapters=AdapterRegistry(context_provider=provider),
+            extensions=[ContextPacketExtension(recipes=[_steering_recipe()])],
         )
         result = runtime.plan(
             BridgeRequest(
@@ -184,11 +201,22 @@ class PacketInfrastructureTestCase(unittest.TestCase):
                 metadata={"recipe_id": "implementation_steering"},
             )
         )
-        packet = result.plan.field.context_packet
+        packet = result.plan.field.extensions.get(CONTEXT_PACKET_ATTACHMENT)
         self.assertIsNotNone(packet)
         assert packet is not None
         self.assertGreaterEqual(len(packet.sections), 2)
         self.assertIn("frame-ref", packet.provenance)
+
+    def test_core_works_without_packet_extension_even_when_signals_match(self) -> None:
+        result = BridgeRuntime().plan(
+            BridgeRequest(
+                "request-11",
+                "Build an adapter.",
+                policy=ContextPolicy(allow_context=True),
+            )
+        )
+        self.assertEqual(result.status, "planned")
+        self.assertEqual(result.plan.field.extensions, {})
 
 
 if __name__ == "__main__":

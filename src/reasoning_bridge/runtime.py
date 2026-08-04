@@ -13,11 +13,9 @@ from .contracts import (
     BridgeRequest,
     BridgeResult,
     Classification,
-    ContextPacket,
     ExecutionPlan,
-    FacetMaterial,
 )
-from .packets import DefaultPacketCompiler, RecipeRegistry, context_items_to_materials
+from .extensions import ExtensionContribution, PlanExtension
 from .policy import normalize_policy
 from .routing import resolve_route
 
@@ -40,9 +38,37 @@ def _plan_id(request_id: str, route_id: str) -> str:
     return f"plan-{digest}"
 
 
-def _recipe_id_from_request(request: BridgeRequest) -> str:
-    value = request.metadata.get("recipe_id", "")
-    return value if isinstance(value, str) else ""
+def _run_extensions(
+    extensions: tuple[PlanExtension, ...],
+    *,
+    request: BridgeRequest,
+    policy: Any,
+    classification: Classification,
+    context: tuple[Any, ...],
+) -> ExtensionContribution:
+    attachments: dict[str, Any] = {}
+    warnings: list[str] = []
+    trace: list[dict[str, Any]] = []
+    for extension in extensions:
+        try:
+            contribution = extension.contribute(
+                request=request,
+                policy=policy,
+                classification=classification,
+                context=context,
+            )
+        except Exception as exc:  # extensions are trust boundaries
+            warnings.append(f"extension_failed:{extension.extension_id}:{type(exc).__name__}")
+            trace.append({"event": "extension_failed", "extension_id": extension.extension_id})
+            continue
+        attachments.update(contribution.attachments)
+        warnings.extend(contribution.warnings)
+        trace.extend(dict(item) for item in contribution.trace)
+    return ExtensionContribution(
+        attachments=attachments,
+        warnings=tuple(warnings),
+        trace=tuple(trace),
+    )
 
 
 class BridgeRuntime:
@@ -50,13 +76,12 @@ class BridgeRuntime:
         self,
         *,
         behaviors: tuple[Any, ...] | list[Any] = (),
-        recipes: tuple[Any, ...] | list[Any] = (),
         adapters: AdapterRegistry | None = None,
+        extensions: tuple[PlanExtension, ...] | list[PlanExtension] = (),
     ) -> None:
         self.behaviors = BehaviorRegistry(behaviors)
-        self.recipes = RecipeRegistry(recipes)
         self.adapters = adapters or AdapterRegistry()
-        self._default_compiler = DefaultPacketCompiler()
+        self.extensions: tuple[PlanExtension, ...] = tuple(extensions)
 
     def plan(self, request: BridgeRequest) -> BridgeResult:
         policy = normalize_policy(request.policy)
@@ -79,38 +104,17 @@ class BridgeRuntime:
                 warnings.append(f"context_provider_failed:{type(exc).__name__}")
         trace.append({"event": "context_resolved", "item_count": len(context)})
 
-        behaviors, evidence = self.behaviors.match(classification.signals)
-        context_packet: ContextPacket | None = None
-        recipe = self.recipes.select(classification.signals, recipe_id=_recipe_id_from_request(request))
-        if recipe is not None and policy.allow_context:
-            materials: list[FacetMaterial] = list(context_items_to_materials(context))
-            if self.adapters.facet_provider is not None:
-                try:
-                    materials.extend(self.adapters.facet_provider.collect(request, policy, recipe))
-                except Exception as exc:  # adapters are trust boundaries
-                    warnings.append(f"facet_provider_failed:{type(exc).__name__}")
-            compiler = self.adapters.packet_compiler or self._default_compiler
-            try:
-                context_packet = compiler.compile(
-                    recipe=recipe,
-                    materials=tuple(materials),
-                    policy=policy,
-                    request_id=request.request_id,
-                )
-                warnings.extend(context_packet.warnings)
-            except Exception as exc:  # adapters are trust boundaries
-                warnings.append(f"packet_compiler_failed:{type(exc).__name__}")
-            trace.append(
-                {
-                    "event": "context_packet_compiled",
-                    "recipe_id": recipe.recipe_id,
-                    "section_count": len(context_packet.sections) if context_packet else 0,
-                    "coverage": context_packet.density.coverage if context_packet else 0.0,
-                }
-            )
-        elif recipe is not None:
-            trace.append({"event": "context_packet_skipped", "reason": "policy_denied"})
+        contribution = _run_extensions(
+            self.extensions,
+            request=request,
+            policy=policy,
+            classification=classification,
+            context=context,
+        )
+        warnings.extend(contribution.warnings)
+        trace.extend(dict(item) for item in contribution.trace)
 
+        behaviors, evidence = self.behaviors.match(classification.signals)
         field = ActiveField(
             signals=classification.signals,
             matched_behavior_ids=tuple(item.behavior_id for item in behaviors),
@@ -118,7 +122,7 @@ class BridgeRuntime:
             constraints=request.constraints,
             context=context,
             confidence=classification.confidence,
-            context_packet=context_packet,
+            extensions=contribution.attachments,
         )
         route = resolve_route(behaviors, confidence=classification.confidence)
         directives = tuple(directive for behavior in behaviors for directive in behavior.directives)

@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from hashlib import sha256
 
+from ...contracts import ContextItem, ContextPolicy
 from .contracts import (
-    ContextItem,
     ContextPacket,
-    ContextPolicy,
     DensityProfile,
     DensityReport,
     FacetMaterial,

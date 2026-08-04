@@ -206,7 +206,9 @@ This note does not claim:
 
 ## Practical mapping into this repo
 
-| Research need | Bridge primitive |
+Packet assembly is an **optional extension**, not a core bridge function.
+
+| Research need | Extension primitive |
 |---|---|
 | Activation object | `ContextPacket` |
 | Configurable shape | `PacketRecipe` + `PacketSlotSpec` |
@@ -214,9 +216,14 @@ This note does not claim:
 | Prevent improv | required slots + `locked_variables` |
 | Prevent caricature | `open_variables`, `anti_caricature_rules`, `max_stereotype_risk` |
 | Tune density | `density_profile`, budgets, `DensityReport` |
-| Inspectability | packet `warnings`, `provenance`, runtime trace events |
+| Inspectability | packet `warnings`, `provenance`, extension trace events |
+| Core integration | `ContextPacketExtension` via `BridgeRuntime(extensions=[...])` |
+| Attachment key | `ActiveField.extensions["context_packet"]` |
+
+Import path: `reasoning_bridge.extensions.packet`.
 
 When extending the compiler or adding live source adapters (Knowledge Ocean,
 LLC containers, chat documents), preserve this mapping: sources emit materials;
 recipes define activation geometry; the compiler enforces the sparse/rich/over
-continuum.
+continuum. Keep new domain capabilities as additional `PlanExtension`
+modules so the core remains multi-function.
