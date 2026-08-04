@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from dataclasses import asdict
 from hashlib import sha256
 from typing import Any
 
@@ -14,8 +13,11 @@ from .contracts import (
     BridgeRequest,
     BridgeResult,
     Classification,
+    ContextPacket,
     ExecutionPlan,
+    FacetMaterial,
 )
+from .packets import DefaultPacketCompiler, RecipeRegistry, context_items_to_materials
 from .policy import normalize_policy
 from .routing import resolve_route
 
@@ -38,15 +40,23 @@ def _plan_id(request_id: str, route_id: str) -> str:
     return f"plan-{digest}"
 
 
+def _recipe_id_from_request(request: BridgeRequest) -> str:
+    value = request.metadata.get("recipe_id", "")
+    return value if isinstance(value, str) else ""
+
+
 class BridgeRuntime:
     def __init__(
         self,
         *,
         behaviors: tuple[Any, ...] | list[Any] = (),
+        recipes: tuple[Any, ...] | list[Any] = (),
         adapters: AdapterRegistry | None = None,
     ) -> None:
         self.behaviors = BehaviorRegistry(behaviors)
+        self.recipes = RecipeRegistry(recipes)
         self.adapters = adapters or AdapterRegistry()
+        self._default_compiler = DefaultPacketCompiler()
 
     def plan(self, request: BridgeRequest) -> BridgeResult:
         policy = normalize_policy(request.policy)
@@ -70,6 +80,37 @@ class BridgeRuntime:
         trace.append({"event": "context_resolved", "item_count": len(context)})
 
         behaviors, evidence = self.behaviors.match(classification.signals)
+        context_packet: ContextPacket | None = None
+        recipe = self.recipes.select(classification.signals, recipe_id=_recipe_id_from_request(request))
+        if recipe is not None and policy.allow_context:
+            materials: list[FacetMaterial] = list(context_items_to_materials(context))
+            if self.adapters.facet_provider is not None:
+                try:
+                    materials.extend(self.adapters.facet_provider.collect(request, policy, recipe))
+                except Exception as exc:  # adapters are trust boundaries
+                    warnings.append(f"facet_provider_failed:{type(exc).__name__}")
+            compiler = self.adapters.packet_compiler or self._default_compiler
+            try:
+                context_packet = compiler.compile(
+                    recipe=recipe,
+                    materials=tuple(materials),
+                    policy=policy,
+                    request_id=request.request_id,
+                )
+                warnings.extend(context_packet.warnings)
+            except Exception as exc:  # adapters are trust boundaries
+                warnings.append(f"packet_compiler_failed:{type(exc).__name__}")
+            trace.append(
+                {
+                    "event": "context_packet_compiled",
+                    "recipe_id": recipe.recipe_id,
+                    "section_count": len(context_packet.sections) if context_packet else 0,
+                    "coverage": context_packet.density.coverage if context_packet else 0.0,
+                }
+            )
+        elif recipe is not None:
+            trace.append({"event": "context_packet_skipped", "reason": "policy_denied"})
+
         field = ActiveField(
             signals=classification.signals,
             matched_behavior_ids=tuple(item.behavior_id for item in behaviors),
@@ -77,6 +118,7 @@ class BridgeRuntime:
             constraints=request.constraints,
             context=context,
             confidence=classification.confidence,
+            context_packet=context_packet,
         )
         route = resolve_route(behaviors, confidence=classification.confidence)
         directives = tuple(directive for behavior in behaviors for directive in behavior.directives)

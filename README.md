@@ -5,8 +5,9 @@ into an inspectable execution plan. It does not require a model provider,
 vector store, network service, database, or host application.
 
 The core owns contracts, behavior matching, policy enforcement, deterministic
-routing, traces, and execution plans. Hosts provide optional adapters for
-classification, context, state, execution, learning, and telemetry.
+routing, context-packet recipes/compilation, traces, and execution plans. Hosts
+provide optional adapters for classification, context, facets, packet
+compilation, state, execution, learning, and telemetry.
 
 ```python
 from reasoning_bridge import BehaviorSpec, BridgeRequest, BridgeRuntime
@@ -33,6 +34,23 @@ Run the dependency-free test suite with:
 
 ```bash
 PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+## Context packets
+
+Packet infrastructure is recipe-driven and compiler-based:
+
+1. Register a `PacketRecipe` with typed slots (`frame`, `constraints`, …).
+2. Provide `FacetMaterial` values via a facet provider and/or role-tagged context items.
+3. When policy allows context, the runtime selects a recipe and compiles a
+   `ContextPacket` onto `ActiveField.context_packet`.
+
+The default compiler is deterministic: rank by lock/salience, enforce budgets,
+skip high stereotype-risk fills, and report coverage/openness. Hosts may swap
+the compiler through `AdapterRegistry.packet_compiler`.
+
+```bash
+PYTHONPATH=src python examples/context_packet.py
 ```
 
 ## Design constraints

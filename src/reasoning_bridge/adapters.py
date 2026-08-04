@@ -9,8 +9,11 @@ from .contracts import (
     BridgeRequest,
     Classification,
     ContextItem,
+    ContextPacket,
     ContextPolicy,
     ExecutionPlan,
+    FacetMaterial,
+    PacketRecipe,
 )
 
 
@@ -22,6 +25,28 @@ class ClassifierPort(Protocol):
 @runtime_checkable
 class ContextProviderPort(Protocol):
     def retrieve(self, request: BridgeRequest, policy: ContextPolicy) -> tuple[ContextItem, ...]: ...
+
+
+@runtime_checkable
+class FacetProviderPort(Protocol):
+    def collect(
+        self,
+        request: BridgeRequest,
+        policy: ContextPolicy,
+        recipe: PacketRecipe,
+    ) -> tuple[FacetMaterial, ...]: ...
+
+
+@runtime_checkable
+class PacketCompilerPort(Protocol):
+    def compile(
+        self,
+        *,
+        recipe: PacketRecipe,
+        materials: tuple[FacetMaterial, ...],
+        policy: ContextPolicy,
+        request_id: str = "",
+    ) -> ContextPacket: ...
 
 
 @runtime_checkable
@@ -43,6 +68,8 @@ class TelemetryPort(Protocol):
 class AdapterRegistry:
     classifier: ClassifierPort | None = None
     context_provider: ContextProviderPort | None = None
+    facet_provider: FacetProviderPort | None = None
+    packet_compiler: PacketCompilerPort | None = None
     executor: ExecutorPort | None = None
     learning: LearningPort | None = None
     telemetry: TelemetryPort | None = None
@@ -51,6 +78,8 @@ class AdapterRegistry:
         names = {
             "classify": self.classifier,
             "context": self.context_provider,
+            "facets": self.facet_provider,
+            "packet_compile": self.packet_compiler,
             "execute": self.executor,
             "learn": self.learning,
             "telemetry": self.telemetry,
@@ -88,4 +117,28 @@ class InMemoryContextProvider:
                 bounded.append(ContextItem(item.reference, content, item.scope, item.score, item.metadata))
                 remaining -= len(content)
             selected = bounded
+        return tuple(selected)
+
+
+@dataclass(slots=True)
+class InMemoryFacetProvider:
+    """Reference facet source for packet compilation tests and host scaffolding."""
+
+    materials: tuple[FacetMaterial, ...] = ()
+    calls: list[str] = field(default_factory=list)
+
+    def collect(
+        self,
+        request: BridgeRequest,
+        policy: ContextPolicy,
+        recipe: PacketRecipe,
+    ) -> tuple[FacetMaterial, ...]:
+        self.calls.append(recipe.recipe_id)
+        if not policy.allow_context or policy.privacy_mode == "incognito":
+            return ()
+        allowed_roles = {slot.role for slot in recipe.slots}
+        selected = [item for item in self.materials if item.role_hint in allowed_roles]
+        if policy.allowed_scopes:
+            selected = [item for item in selected if not item.scope or item.scope in policy.allowed_scopes]
+        selected = [item for item in selected if not item.scope or item.scope not in policy.excluded_scopes]
         return tuple(selected)
