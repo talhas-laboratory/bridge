@@ -19,9 +19,11 @@ fold into the core.
 Reference extensions:
 - `reasoning_bridge.extensions.packet` (`ContextPacketExtension`)
 - `reasoning_bridge.extensions.progressive` (`ProgressiveDisclosureExtension`)
+- `reasoning_bridge.extensions.router` (`CharacteristicRouterExtension`)
 
 New capabilities should follow that pattern. Domain-specific vocabulary belongs
-in lens/extension packs, not in core runtime.
+in lens/extension packs, not in core runtime. Router intelligence must remain
+an optional agent port; deterministic policy stays authoritative by default.
 
 ### Rules for every change
 

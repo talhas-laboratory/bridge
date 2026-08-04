@@ -310,10 +310,14 @@ def _schema_subcategory(name: str) -> str:
         return "extension:packet"
     if name.startswith(("lens-", "world-manifest", "definition-binding")):
         return "extension:progressive"
+    if name.startswith(("route-", "context-configuration")):
+        return "extension:router"
     return "core"
 
 
 def _example_subcategory(name: str) -> str:
+    if "router" in name or "characteristic_router" in name:
+        return "extension:router"
     if "progressive" in name:
         return "extension:progressive"
     if "packet" in name:
@@ -323,6 +327,8 @@ def _example_subcategory(name: str) -> str:
 
 def _doc_subcategory(name: str) -> str:
     lowered = name.lower()
+    if "router" in lowered:
+        return "extension:router"
     if "progressive" in lowered:
         return "extension:progressive"
     if "packet" in lowered:
@@ -351,9 +357,13 @@ def scan_assets() -> list[AssetInfo]:
                         ("reasoning_bridge.contracts",)
                         if _schema_subcategory(path.name) == "core"
                         else (
-                            ("reasoning_bridge.extensions.progressive",)
-                            if _schema_subcategory(path.name) == "extension:progressive"
-                            else ("reasoning_bridge.extensions.packet",)
+                            ("reasoning_bridge.extensions.router",)
+                            if _schema_subcategory(path.name) == "extension:router"
+                            else (
+                                ("reasoning_bridge.extensions.progressive",)
+                                if _schema_subcategory(path.name) == "extension:progressive"
+                                else ("reasoning_bridge.extensions.packet",)
+                            )
                         )
                     ),
                     last_commit=commit,

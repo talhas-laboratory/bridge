@@ -100,6 +100,25 @@ Attachments:
 - `definition_binding`
 - `progressive_snapshot`
 
+### Characteristic router (optional)
+
+Configurable state router under `reasoning_bridge.extensions.router`:
+
+1. Scan content for characteristic states  
+2. Match a `RoutePolicy`  
+3. Emit a `ContextConfiguration` (+ simple graph neighborhood)
+
+Deterministic by default. Optional `AgentIntelligencePort` / `AgentIntelligenceAdapter`
+is the hook for OpenClaw, Codex, or other agent backends.
+
+```bash
+PYTHONPATH=src python examples/characteristic_router.py
+```
+
+Attachments:
+- `route_state`
+- `context_configuration`
+
 ## Design constraints
 
 - Python 3.11+ and the standard library only.

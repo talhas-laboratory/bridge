@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reasoning-bridge.dev/schemas/v1/context-configuration.schema.json",
+  "title": "ContextConfiguration",
+  "type": "object",
+  "required": ["configuration_id"],
+  "properties": {
+    "configuration_id": {"type": "string", "minLength": 1},
+    "lens_id": {"type": "string"},
+    "recipe_id": {"type": "string"},
+    "force_manifest": {"type": "array", "items": {"type": "string"}},
+    "force_define": {"type": "array", "items": {"type": "string"}},
+    "defer": {"type": "array", "items": {"type": "string"}},
+    "source_bindings": {"type": "array", "items": {"type": "string"}},
+    "disclosure_stage": {"enum": ["manifest", "define", "deepen"]},
+    "density_profile": {"type": "string"},
+    "content_refs": {"type": "array", "items": {"type": "string"}},
+    "metadata": {"type": "object"}
+  },
+  "additionalProperties": false
+}

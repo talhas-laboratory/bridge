@@ -3,9 +3,9 @@
 Automatically generated catalog of Reasoning Bridge modules, extensions,
 schemas, examples, and recent updates.
 
-- Generated at: `2026-08-04T23:08:25.284105+00:00`
+- Generated at: `2026-08-04T23:14:27.345161+00:00`
 - Package version: `0.1.0`
-- Known extensions: `packet`, `progressive`
+- Known extensions: `packet`, `progressive`, `router`
 
 Regenerate with:
 
@@ -19,9 +19,9 @@ python tools/bridge_index.py
 |---|---|
 | `core` | 7 |
 | `extension_hook` | 1 |
-| `extension` | 11 |
-| `schema` | 7 |
-| `example` | 3 |
+| `extension` | 17 |
+| `schema` | 9 |
+| `example` | 4 |
 | `docs` | 2 |
 | `tooling` | 1 |
 
@@ -57,13 +57,20 @@ python tools/bridge_index.py
 | `reasoning_bridge.extensions.packet.compiler` | `extension:packet` | Declarative context-packet recipes and a deterministic default compiler. | extension, packet, recipe, registry | `594878134ef6` refactor: make context packets an optional plan extension |
 | `reasoning_bridge.extensions.packet.contracts` | `extension:packet` | Contracts owned by the optional context-packet extension. | contract, extension, packet, recipe | `594878134ef6` refactor: make context packets an optional plan extension |
 | `reasoning_bridge.extensions.packet.extension` | `extension:packet` | Plan-time extension that compiles context packets without coupling the core. | extension, packet, plan-extension | `594878134ef6` refactor: make context packets an optional plan extension |
-| `reasoning_bridge.extensions.progressive` | `extension:progressive` | Progressive disclosure: manifesting + defining forces with lens vocabularies. | extension, progressive | — |
+| `reasoning_bridge.extensions.progressive` | `extension:progressive` | Progressive disclosure: manifesting + defining forces with lens vocabularies. | extension, progressive | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
 | ↳ exports | | `DEFINITION_BINDING_ATTACHMENT`, `PROGRESSIVE_SNAPSHOT_ATTACHMENT`, `WORLD_MANIFEST_ATTACHMENT`, `ConstituentKindSpec`, `DefinePort`, `DefinitionBinding`, `DefinitionEntry`, `InMemoryDefineProvider`, `InMemoryManifestProvider`, `LensRegistry`, `LensVocabulary`, `ManifestPort`, … | | |
-| `reasoning_bridge.extensions.progressive.adapters` | `extension:progressive` | Ports for the manifesting and defining forces. | adapter-port, extension, progressive | — |
-| `reasoning_bridge.extensions.progressive.contracts` | `extension:progressive` | Domain-agnostic progressive disclosure contracts. Manifesting force = which constituents are in play. Defining force = s… | contract, extension, progressive | — |
-| `reasoning_bridge.extensions.progressive.engine` | `extension:progressive` | Deterministic progressive disclosure engine: manifest → select → define → defer. | extension, progressive | — |
-| `reasoning_bridge.extensions.progressive.extension` | `extension:progressive` | Plan-time progressive disclosure extension with swappable lens vocabularies. | extension, plan-extension, progressive | — |
-| `reasoning_bridge.extensions.progressive.lenses` | `extension:progressive` | Lens vocabulary registry and starter domain packs. Lenses populate kind vocabularies only. Retrieval/providers stay sepa… | extension, progressive, registry | — |
+| `reasoning_bridge.extensions.progressive.adapters` | `extension:progressive` | Ports for the manifesting and defining forces. | adapter-port, extension, progressive | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `reasoning_bridge.extensions.progressive.contracts` | `extension:progressive` | Domain-agnostic progressive disclosure contracts. Manifesting force = which constituents are in play. Defining force = s… | contract, extension, progressive | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `reasoning_bridge.extensions.progressive.engine` | `extension:progressive` | Deterministic progressive disclosure engine: manifest → select → define → defer. | extension, progressive | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `reasoning_bridge.extensions.progressive.extension` | `extension:progressive` | Plan-time progressive disclosure extension with swappable lens vocabularies. | extension, plan-extension, progressive | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `reasoning_bridge.extensions.progressive.lenses` | `extension:progressive` | Lens vocabulary registry and starter domain packs. Lenses populate kind vocabularies only. Retrieval/providers stay sepa… | extension, progressive, registry | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `reasoning_bridge.extensions.router` | `extension:router` | Characteristic-state router for configurable context selection. | extension, router | — |
+| ↳ exports | | `CONTEXT_CONFIGURATION_ATTACHMENT`, `ROUTE_STATE_ATTACHMENT`, `AgentIntelligenceAdapter`, `AgentIntelligencePort`, `CharacteristicGraph`, `CharacteristicObservation`, `CharacteristicRouter`, `CharacteristicRouterExtension`, `ContentEnvelope`, `ContentScannerPort`, `ContextConfiguration`, `GraphEdge`, … | | |
+| `reasoning_bridge.extensions.router.adapters` | `extension:router` | Scanner and agent-intelligence ports for the characteristic router. | adapter-port, extension, router | — |
+| `reasoning_bridge.extensions.router.contracts` | `extension:router` | Configurable characteristic-state router contracts. Scan content → observe characteristic states → select a context conf… | contract, extension, policy, router | — |
+| `reasoning_bridge.extensions.router.engine` | `extension:router` | Deterministic characteristic-state router with optional agent assistance. | extension, router | — |
+| `reasoning_bridge.extensions.router.extension` | `extension:router` | Plan-time characteristic router extension. | extension, plan-extension, router | — |
+| `reasoning_bridge.extensions.router.policies` | `extension:router` | Route policy registry and starter configurable packs. | extension, policy, registry, router | — |
 
 ## Assets
 
@@ -71,22 +78,26 @@ python tools/bridge_index.py
 |---|---|---|---|---|
 | `schema:behavior-spec.schema` | `schema/core` | BehaviorSpec | `reasoning_bridge.contracts` | `54e94b9a95b5` feat: add adapter-first reasoning bridge core |
 | `schema:bridge-request.schema` | `schema/core` | BridgeRequest | `reasoning_bridge.contracts` | `54e94b9a95b5` feat: add adapter-first reasoning bridge core |
+| `schema:context-configuration.schema` | `schema/extension:router` | ContextConfiguration | `reasoning_bridge.extensions.router` | — |
 | `schema:context-packet.schema` | `schema/extension:packet` | ContextPacket | `reasoning_bridge.extensions.packet` | `2db0f5f1636a` feat: add configurable context-packet infrastructure |
-| `schema:definition-binding.schema` | `schema/extension:progressive` | DefinitionBinding | `reasoning_bridge.extensions.progressive` | — |
-| `schema:lens-vocabulary.schema` | `schema/extension:progressive` | LensVocabulary | `reasoning_bridge.extensions.progressive` | — |
+| `schema:definition-binding.schema` | `schema/extension:progressive` | DefinitionBinding | `reasoning_bridge.extensions.progressive` | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `schema:lens-vocabulary.schema` | `schema/extension:progressive` | LensVocabulary | `reasoning_bridge.extensions.progressive` | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
 | `schema:packet-recipe.schema` | `schema/extension:packet` | PacketRecipe | `reasoning_bridge.extensions.packet` | `2db0f5f1636a` feat: add configurable context-packet infrastructure |
-| `schema:world-manifest.schema` | `schema/extension:progressive` | WorldManifest | `reasoning_bridge.extensions.progressive` | — |
+| `schema:route-policy.schema` | `schema/extension:router` | RoutePolicy | `reasoning_bridge.extensions.router` | — |
+| `schema:world-manifest.schema` | `schema/extension:progressive` | WorldManifest | `reasoning_bridge.extensions.progressive` | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `example:characteristic_router` | `example/extension:router` | Example script `characteristic_router.py` | — | — |
 | `example:context_packet` | `example/extension:packet` | Example script `context_packet.py` | — | `594878134ef6` refactor: make context packets an optional plan extension |
 | `example:custom_adapter` | `example/core` | Example script `custom_adapter.py` | — | `54e94b9a95b5` feat: add adapter-first reasoning bridge core |
-| `example:progressive_disclosure` | `example/extension:progressive` | Example script `progressive_disclosure.py` | — | — |
+| `example:progressive_disclosure` | `example/extension:progressive` | Example script `progressive_disclosure.py` | — | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
 | `docs:context-packet-research-grounding` | `docs/extension:packet` | Context Packet Research Grounding | — | `594878134ef6` refactor: make context packets an optional plan extension |
-| `tool:bridge_index` | `tooling/index` | Automatic bridge module/feature indexer. Scans the repository, categorizes core vs extension surfaces, and writes: - docs/bridge-index.json (machine-readable) - docs/BRIDGE_INDEX.md (human-readable) Stdlib only. Safe to run without network. Prefer regenerating after any feature, extension, schema, or example change. | — | `3e9f94a4f81e` feat: add automatic bridge module and feature index |
-| `docs:AGENTS` | `docs/agent-guidance` | Agent working rules for modular bridge development | `reasoning_bridge.extensions` | `3e9f94a4f81e` feat: add automatic bridge module and feature index |
+| `tool:bridge_index` | `tooling/index` | Automatic bridge module/feature indexer. Scans the repository, categorizes core vs extension surfaces, and writes: - docs/bridge-index.json (machine-readable) - docs/BRIDGE_INDEX.md (human-readable) Stdlib only. Safe to run without network. Prefer regenerating after any feature, extension, schema, or example change. | — | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
+| `docs:AGENTS` | `docs/agent-guidance` | Agent working rules for modular bridge development | `reasoning_bridge.extensions` | `5db661cca6e9` feat: add progressive disclosure extension with lens vocabularies |
 
 ## Recent repository updates
 
 | Commit | Date | Subject |
 |---|---|---|
+| `5db661c` | 2026-08-04T23:08:28+00:00 | feat: add progressive disclosure extension with lens vocabularies |
 | `3e9f94a` | 2026-08-04T13:00:53+00:00 | feat: add automatic bridge module and feature index |
 | `b863190` | 2026-08-04T12:51:38+00:00 | docs: add AGENTS.md modularity rules for bridge work |
 | `5948781` | 2026-08-04T12:50:00+00:00 | refactor: make context packets an optional plan extension |

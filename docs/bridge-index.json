@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T23:08:25.284105+00:00",
+  "generated_at": "2026-08-04T23:14:27.345161+00:00",
   "package": "reasoning-bridge",
   "version": "0.1.0",
   "categories": {
@@ -26,18 +26,27 @@
       "reasoning_bridge.extensions.progressive.contracts",
       "reasoning_bridge.extensions.progressive.engine",
       "reasoning_bridge.extensions.progressive.extension",
-      "reasoning_bridge.extensions.progressive.lenses"
+      "reasoning_bridge.extensions.progressive.lenses",
+      "reasoning_bridge.extensions.router",
+      "reasoning_bridge.extensions.router.adapters",
+      "reasoning_bridge.extensions.router.contracts",
+      "reasoning_bridge.extensions.router.engine",
+      "reasoning_bridge.extensions.router.extension",
+      "reasoning_bridge.extensions.router.policies"
     ],
     "schema": [
       "schema:behavior-spec.schema",
       "schema:bridge-request.schema",
+      "schema:context-configuration.schema",
       "schema:context-packet.schema",
       "schema:definition-binding.schema",
       "schema:lens-vocabulary.schema",
       "schema:packet-recipe.schema",
+      "schema:route-policy.schema",
       "schema:world-manifest.schema"
     ],
     "example": [
+      "example:characteristic_router",
       "example:context_packet",
       "example:custom_adapter",
       "example:progressive_disclosure"
@@ -607,9 +616,9 @@
         "extension",
         "progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "module_id": "reasoning_bridge.extensions.progressive.adapters",
@@ -658,9 +667,9 @@
         "extension",
         "progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "module_id": "reasoning_bridge.extensions.progressive.contracts",
@@ -740,9 +749,9 @@
         "extension",
         "progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "module_id": "reasoning_bridge.extensions.progressive.engine",
@@ -779,9 +788,9 @@
         "extension",
         "progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "module_id": "reasoning_bridge.extensions.progressive.extension",
@@ -826,9 +835,9 @@
         "plan-extension",
         "progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "module_id": "reasoning_bridge.extensions.progressive.lenses",
@@ -872,6 +881,315 @@
         "extension",
         "progressive",
         "registry"
+      ],
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router",
+      "path": "src/reasoning_bridge/extensions/router/__init__.py",
+      "category": "extension",
+      "subcategory": "router.package",
+      "layer": "extension:router",
+      "summary": "Characteristic-state router for configurable context selection.",
+      "exports": [
+        "CONTEXT_CONFIGURATION_ATTACHMENT",
+        "ROUTE_STATE_ATTACHMENT",
+        "AgentIntelligenceAdapter",
+        "AgentIntelligencePort",
+        "CharacteristicGraph",
+        "CharacteristicObservation",
+        "CharacteristicRouter",
+        "CharacteristicRouterExtension",
+        "ContentEnvelope",
+        "ContentScannerPort",
+        "ContextConfiguration",
+        "GraphEdge",
+        "KeywordContentScanner",
+        "RoutePolicy",
+        "RoutePolicyRegistry",
+        "RouteRule",
+        "RouteState",
+        "activate_neighborhood",
+        "business_strategy_route_policy",
+        "default_route_policy_registry",
+        "match_rule"
+      ],
+      "symbols": [],
+      "tags": [
+        "extension",
+        "router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router.adapters",
+      "path": "src/reasoning_bridge/extensions/router/adapters.py",
+      "category": "extension",
+      "subcategory": "router.adapters",
+      "layer": "extension:router",
+      "summary": "Scanner and agent-intelligence ports for the characteristic router.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ContentScannerPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.adapters.ContentScannerPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": "Deterministic or host-owned content scanner."
+        },
+        {
+          "name": "AgentIntelligencePort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.adapters.AgentIntelligencePort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": "Optional intelligence hook for OpenClaw, Codex, or other agents. Base form is proposal-only: the deterministic policy remains authoritative unless a host explicitly trusts agent configuration proposals."
+        },
+        {
+          "name": "KeywordContentScanner",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.adapters.KeywordContentScanner",
+          "bases": [],
+          "docstring": "Simple deterministic scanner: keyword cues \u2192 characteristic states."
+        },
+        {
+          "name": "AgentIntelligenceAdapter",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.adapters.AgentIntelligenceAdapter",
+          "bases": [],
+          "docstring": "Thin adapter around a callable agent backend (OpenClaw/Codex/etc.). The backend may be any sync callable. Failures become empty proposals so the deterministic router can still decide."
+        }
+      ],
+      "tags": [
+        "adapter-port",
+        "extension",
+        "router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router.contracts",
+      "path": "src/reasoning_bridge/extensions/router/contracts.py",
+      "category": "extension",
+      "subcategory": "router.contracts",
+      "layer": "extension:router",
+      "summary": "Configurable characteristic-state router contracts. Scan content \u2192 observe characteristic states \u2192 select a context configuration. Intelligence (OpenClaw/Codex/etc.) plugs in through an optional agent port.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ContentEnvelope",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.ContentEnvelope",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Normalized wrapper so any content type can enter the router."
+        },
+        {
+          "name": "CharacteristicObservation",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.CharacteristicObservation",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Detected state of one characteristic in the scanned content."
+        },
+        {
+          "name": "GraphEdge",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.GraphEdge",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Simple typed relation for neighborhood activation."
+        },
+        {
+          "name": "CharacteristicGraph",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.CharacteristicGraph",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Minimal graph substrate: observed nodes + configured edges."
+        },
+        {
+          "name": "ContextConfiguration",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.ContextConfiguration",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Router output: what progressive/packet layers should assemble next."
+        },
+        {
+          "name": "RouteRule",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.RouteRule",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Deterministic mapping from characteristic-state patterns to a configuration."
+        },
+        {
+          "name": "RoutePolicy",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.RoutePolicy",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Configurable router policy pack for a domain/lens."
+        },
+        {
+          "name": "RouteState",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.contracts.RouteState",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Inspectable router decision."
+        }
+      ],
+      "tags": [
+        "contract",
+        "extension",
+        "policy",
+        "router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router.engine",
+      "path": "src/reasoning_bridge/extensions/router/engine.py",
+      "category": "extension",
+      "subcategory": "router.engine",
+      "layer": "extension:router",
+      "summary": "Deterministic characteristic-state router with optional agent assistance.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "match_rule",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.router.engine.match_rule",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "activate_neighborhood",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.router.engine.activate_neighborhood",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "apply_neighborhood_to_configuration",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.router.engine.apply_neighborhood_to_configuration",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "CharacteristicRouter",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.engine.CharacteristicRouter",
+          "bases": [],
+          "docstring": "Scan \u2192 observe states \u2192 match policy \u2192 emit context configuration."
+        }
+      ],
+      "tags": [
+        "extension",
+        "router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router.extension",
+      "path": "src/reasoning_bridge/extensions/router/extension.py",
+      "category": "extension",
+      "subcategory": "router.extension",
+      "layer": "extension:router",
+      "summary": "Plan-time characteristic router extension.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ROUTE_STATE_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.router.extension.ROUTE_STATE_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "CONTEXT_CONFIGURATION_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.router.extension.CONTEXT_CONFIGURATION_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "CharacteristicRouterExtension",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.extension.CharacteristicRouterExtension",
+          "bases": [],
+          "docstring": "Optional add-on: content \u2192 characteristic states \u2192 context configuration."
+        }
+      ],
+      "tags": [
+        "extension",
+        "plan-extension",
+        "router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.router.policies",
+      "path": "src/reasoning_bridge/extensions/router/policies.py",
+      "category": "extension",
+      "subcategory": "router.policies",
+      "layer": "extension:router",
+      "summary": "Route policy registry and starter configurable packs.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "RoutePolicyRegistry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.router.policies.RoutePolicyRegistry",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "business_strategy_route_policy",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.router.policies.business_strategy_route_policy",
+          "bases": [],
+          "docstring": "Starter configurable policy for business/strategy content."
+        },
+        {
+          "name": "default_route_policy_registry",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.router.policies.default_route_policy_registry",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "extension",
+        "policy",
+        "registry",
+        "router"
       ],
       "last_commit": "",
       "last_commit_date": "",
@@ -995,6 +1313,23 @@
       "last_commit_subject": "feat: add adapter-first reasoning bridge core"
     },
     {
+      "asset_id": "schema:context-configuration.schema",
+      "path": "schemas/v1/context-configuration.schema.json",
+      "category": "schema",
+      "subcategory": "extension:router",
+      "summary": "ContextConfiguration",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
       "asset_id": "schema:context-packet.schema",
       "path": "schemas/v1/context-packet.schema.json",
       "category": "schema",
@@ -1024,9 +1359,9 @@
       "related_modules": [
         "reasoning_bridge.extensions.progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "asset_id": "schema:lens-vocabulary.schema",
@@ -1041,9 +1376,9 @@
       "related_modules": [
         "reasoning_bridge.extensions.progressive"
       ],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "asset_id": "schema:packet-recipe.schema",
@@ -1063,6 +1398,23 @@
       "last_commit_subject": "feat: add configurable context-packet infrastructure"
     },
     {
+      "asset_id": "schema:route-policy.schema",
+      "path": "schemas/v1/route-policy.schema.json",
+      "category": "schema",
+      "subcategory": "extension:router",
+      "summary": "RoutePolicy",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.router"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
       "asset_id": "schema:world-manifest.schema",
       "path": "schemas/v1/world-manifest.schema.json",
       "category": "schema",
@@ -1075,6 +1427,20 @@
       "related_modules": [
         "reasoning_bridge.extensions.progressive"
       ],
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
+    },
+    {
+      "asset_id": "example:characteristic_router",
+      "path": "examples/characteristic_router.py",
+      "category": "example",
+      "subcategory": "extension:router",
+      "summary": "Example script `characteristic_router.py`",
+      "tags": [
+        "example"
+      ],
+      "related_modules": [],
       "last_commit": "",
       "last_commit_date": "",
       "last_commit_subject": ""
@@ -1117,9 +1483,9 @@
         "example"
       ],
       "related_modules": [],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "asset_id": "docs:context-packet-research-grounding",
@@ -1145,9 +1511,9 @@
         "tooling"
       ],
       "related_modules": [],
-      "last_commit": "3e9f94a4f81e",
-      "last_commit_date": "2026-08-04T13:00:53+00:00",
-      "last_commit_subject": "feat: add automatic bridge module and feature index"
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     },
     {
       "asset_id": "docs:AGENTS",
@@ -1163,16 +1529,22 @@
       "related_modules": [
         "reasoning_bridge.extensions"
       ],
-      "last_commit": "3e9f94a4f81e",
-      "last_commit_date": "2026-08-04T13:00:53+00:00",
-      "last_commit_subject": "feat: add automatic bridge module and feature index"
+      "last_commit": "5db661cca6e9",
+      "last_commit_date": "2026-08-04T23:08:28+00:00",
+      "last_commit_subject": "feat: add progressive disclosure extension with lens vocabularies"
     }
   ],
   "extensions": [
     "packet",
-    "progressive"
+    "progressive",
+    "router"
   ],
   "update_log": [
+    {
+      "commit": "5db661c",
+      "date": "2026-08-04T23:08:28+00:00",
+      "subject": "feat: add progressive disclosure extension with lens vocabularies"
+    },
     {
       "commit": "3e9f94a",
       "date": "2026-08-04T13:00:53+00:00",
