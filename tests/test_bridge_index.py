@@ -19,7 +19,7 @@ class BridgeIndexTestCase(unittest.TestCase):
         self.assertIn("reasoning_bridge.runtime", module_ids)
         self.assertIn("reasoning_bridge.extensions", module_ids)
         self.assertIn("reasoning_bridge.extensions.packet", module_ids)
-        self.assertEqual(index.extensions, ["packet"])
+        self.assertEqual(index.extensions, ["packet", "progressive"])
 
         runtime = next(module for module in index.modules if module.module_id == "reasoning_bridge.runtime")
         self.assertEqual(runtime.category, "core")

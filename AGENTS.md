@@ -16,8 +16,12 @@ fold into the core.
 | **Core** (`contracts`, `runtime`, `adapters`, `behaviors`, `routing`, `policy`) | Requests, policy, classification hooks, context retrieval hooks, behavior matching, routing, plans, traces, generic `PlanExtension` hook | Domain-specific packet/recipe/compiler logic, source-system clients, product-specific schemas |
 | **Extensions** (`reasoning_bridge.extensions.*`) | Optional domain capabilities | Direct mutation of core control flow except via `PlanExtension` |
 
-The reference extension is `reasoning_bridge.extensions.packet`
-(`ContextPacketExtension`). New capabilities should follow that pattern.
+Reference extensions:
+- `reasoning_bridge.extensions.packet` (`ContextPacketExtension`)
+- `reasoning_bridge.extensions.progressive` (`ProgressiveDisclosureExtension`)
+
+New capabilities should follow that pattern. Domain-specific vocabulary belongs
+in lens/extension packs, not in core runtime.
 
 ### Rules for every change
 

@@ -308,17 +308,24 @@ def scan_modules() -> list[ModuleInfo]:
 def _schema_subcategory(name: str) -> str:
     if name.startswith(("packet-", "context-packet")):
         return "extension:packet"
+    if name.startswith(("lens-", "world-manifest", "definition-binding")):
+        return "extension:progressive"
     return "core"
 
 
 def _example_subcategory(name: str) -> str:
+    if "progressive" in name:
+        return "extension:progressive"
     if "packet" in name:
         return "extension:packet"
     return "core"
 
 
 def _doc_subcategory(name: str) -> str:
-    if "packet" in name.lower():
+    lowered = name.lower()
+    if "progressive" in lowered:
+        return "extension:progressive"
+    if "packet" in lowered:
         return "extension:packet"
     if name.upper().startswith("BRIDGE_INDEX") or name.startswith("bridge-index"):
         return "index"
@@ -340,9 +347,15 @@ def scan_assets() -> list[AssetInfo]:
                     subcategory=_schema_subcategory(path.name),
                     summary=str(data.get("title") or path.stem),
                     tags=("schema", "protocol"),
-                    related_modules=("reasoning_bridge.contracts",)
-                    if _schema_subcategory(path.name) == "core"
-                    else ("reasoning_bridge.extensions.packet",),
+                    related_modules=(
+                        ("reasoning_bridge.contracts",)
+                        if _schema_subcategory(path.name) == "core"
+                        else (
+                            ("reasoning_bridge.extensions.progressive",)
+                            if _schema_subcategory(path.name) == "extension:progressive"
+                            else ("reasoning_bridge.extensions.packet",)
+                        )
+                    ),
                     last_commit=commit,
                     last_commit_date=date,
                     last_commit_subject=subject,

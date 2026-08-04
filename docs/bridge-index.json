@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-04T13:00:53.646581+00:00",
+  "generated_at": "2026-08-04T23:08:25.284105+00:00",
   "package": "reasoning-bridge",
   "version": "0.1.0",
   "categories": {
@@ -20,17 +20,27 @@
       "reasoning_bridge.extensions.packet.adapters",
       "reasoning_bridge.extensions.packet.compiler",
       "reasoning_bridge.extensions.packet.contracts",
-      "reasoning_bridge.extensions.packet.extension"
+      "reasoning_bridge.extensions.packet.extension",
+      "reasoning_bridge.extensions.progressive",
+      "reasoning_bridge.extensions.progressive.adapters",
+      "reasoning_bridge.extensions.progressive.contracts",
+      "reasoning_bridge.extensions.progressive.engine",
+      "reasoning_bridge.extensions.progressive.extension",
+      "reasoning_bridge.extensions.progressive.lenses"
     ],
     "schema": [
       "schema:behavior-spec.schema",
       "schema:bridge-request.schema",
       "schema:context-packet.schema",
-      "schema:packet-recipe.schema"
+      "schema:definition-binding.schema",
+      "schema:lens-vocabulary.schema",
+      "schema:packet-recipe.schema",
+      "schema:world-manifest.schema"
     ],
     "example": [
       "example:context_packet",
-      "example:custom_adapter"
+      "example:custom_adapter",
+      "example:progressive_disclosure"
     ],
     "docs": [
       "docs:AGENTS",
@@ -563,6 +573,311 @@
       "last_commit_subject": "refactor: make context packets an optional plan extension"
     },
     {
+      "module_id": "reasoning_bridge.extensions.progressive",
+      "path": "src/reasoning_bridge/extensions/progressive/__init__.py",
+      "category": "extension",
+      "subcategory": "progressive.package",
+      "layer": "extension:progressive",
+      "summary": "Progressive disclosure: manifesting + defining forces with lens vocabularies.",
+      "exports": [
+        "DEFINITION_BINDING_ATTACHMENT",
+        "PROGRESSIVE_SNAPSHOT_ATTACHMENT",
+        "WORLD_MANIFEST_ATTACHMENT",
+        "ConstituentKindSpec",
+        "DefinePort",
+        "DefinitionBinding",
+        "DefinitionEntry",
+        "InMemoryDefineProvider",
+        "InMemoryManifestProvider",
+        "LensRegistry",
+        "LensVocabulary",
+        "ManifestPort",
+        "ProgressiveDisclosureEngine",
+        "ProgressiveDisclosureExtension",
+        "ProgressiveSnapshot",
+        "WorldConstituent",
+        "WorldManifest",
+        "business_strategy_lens",
+        "default_lens_registry",
+        "generic_lens",
+        "select_active_constituents"
+      ],
+      "symbols": [],
+      "tags": [
+        "extension",
+        "progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.progressive.adapters",
+      "path": "src/reasoning_bridge/extensions/progressive/adapters.py",
+      "category": "extension",
+      "subcategory": "progressive.adapters",
+      "layer": "extension:progressive",
+      "summary": "Ports for the manifesting and defining forces.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ManifestPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.adapters.ManifestPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "DefinePort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.adapters.DefinePort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "InMemoryManifestProvider",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.adapters.InMemoryManifestProvider",
+          "bases": [],
+          "docstring": "Reference manifest source seeded with constituents for tests/hosts."
+        },
+        {
+          "name": "InMemoryDefineProvider",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.adapters.InMemoryDefineProvider",
+          "bases": [],
+          "docstring": "Reference defining source: supplies claims only for requested active ids."
+        }
+      ],
+      "tags": [
+        "adapter-port",
+        "extension",
+        "progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.progressive.contracts",
+      "path": "src/reasoning_bridge/extensions/progressive/contracts.py",
+      "category": "extension",
+      "subcategory": "progressive.contracts",
+      "layer": "extension:progressive",
+      "summary": "Domain-agnostic progressive disclosure contracts. Manifesting force = which constituents are in play. Defining force = state-bound meanings for a selected subset. Lens vocabularies supply domain-specific kinds without changing the operators.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ConstituentKindSpec",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.ConstituentKindSpec",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "One vocabulary entry a lens may manifest."
+        },
+        {
+          "name": "LensVocabulary",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.LensVocabulary",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Domain/lens pack: kinds and defaults only; no retrieval logic."
+        },
+        {
+          "name": "WorldConstituent",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.WorldConstituent",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "A manifested piece of the world-in-play."
+        },
+        {
+          "name": "WorldManifest",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.WorldManifest",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Output of the manifesting force: compositional, light, reusable."
+        },
+        {
+          "name": "DefinitionEntry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.DefinitionEntry",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "One state-bound meaning for a manifested constituent."
+        },
+        {
+          "name": "DefinitionBinding",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.DefinitionBinding",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Output of the defining force: selective bindings + explicit deferrals."
+        },
+        {
+          "name": "ProgressiveSnapshot",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.contracts.ProgressiveSnapshot",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Paired result of one progressive disclosure turn."
+        }
+      ],
+      "tags": [
+        "contract",
+        "extension",
+        "progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.progressive.engine",
+      "path": "src/reasoning_bridge/extensions/progressive/engine.py",
+      "category": "extension",
+      "subcategory": "progressive.engine",
+      "layer": "extension:progressive",
+      "summary": "Deterministic progressive disclosure engine: manifest \u2192 select \u2192 define \u2192 defer.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "select_active_constituents",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.progressive.engine.select_active_constituents",
+          "bases": [],
+          "docstring": "Choose which manifested constituents receive definitions this turn."
+        },
+        {
+          "name": "validate_manifest",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.progressive.engine.validate_manifest",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "ProgressiveDisclosureEngine",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.engine.ProgressiveDisclosureEngine",
+          "bases": [],
+          "docstring": "Runs the two-force loop against a lens vocabulary."
+        }
+      ],
+      "tags": [
+        "extension",
+        "progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.progressive.extension",
+      "path": "src/reasoning_bridge/extensions/progressive/extension.py",
+      "category": "extension",
+      "subcategory": "progressive.extension",
+      "layer": "extension:progressive",
+      "summary": "Plan-time progressive disclosure extension with swappable lens vocabularies.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "WORLD_MANIFEST_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.progressive.extension.WORLD_MANIFEST_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "DEFINITION_BINDING_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.progressive.extension.DEFINITION_BINDING_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "PROGRESSIVE_SNAPSHOT_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.progressive.extension.PROGRESSIVE_SNAPSHOT_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "ProgressiveDisclosureExtension",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.extension.ProgressiveDisclosureExtension",
+          "bases": [],
+          "docstring": "Optional add-on: manifesting force + defining force over a lens vocabulary."
+        }
+      ],
+      "tags": [
+        "extension",
+        "plan-extension",
+        "progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.progressive.lenses",
+      "path": "src/reasoning_bridge/extensions/progressive/lenses.py",
+      "category": "extension",
+      "subcategory": "progressive.lenses",
+      "layer": "extension:progressive",
+      "summary": "Lens vocabulary registry and starter domain packs. Lenses populate kind vocabularies only. Retrieval/providers stay separate so the same progressive operators can be reused across fields.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "LensRegistry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.progressive.lenses.LensRegistry",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "generic_lens",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.progressive.lenses.generic_lens",
+          "bases": [],
+          "docstring": "Minimal cross-domain vocabulary."
+        },
+        {
+          "name": "business_strategy_lens",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.progressive.lenses.business_strategy_lens",
+          "bases": [],
+          "docstring": "Example lens pack for business / strategy / operations."
+        },
+        {
+          "name": "default_lens_registry",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.progressive.lenses.default_lens_registry",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "extension",
+        "progressive",
+        "registry"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
       "module_id": "reasoning_bridge.policy",
       "path": "src/reasoning_bridge/policy.py",
       "category": "core",
@@ -697,6 +1012,40 @@
       "last_commit_subject": "feat: add configurable context-packet infrastructure"
     },
     {
+      "asset_id": "schema:definition-binding.schema",
+      "path": "schemas/v1/definition-binding.schema.json",
+      "category": "schema",
+      "subcategory": "extension:progressive",
+      "summary": "DefinitionBinding",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "asset_id": "schema:lens-vocabulary.schema",
+      "path": "schemas/v1/lens-vocabulary.schema.json",
+      "category": "schema",
+      "subcategory": "extension:progressive",
+      "summary": "LensVocabulary",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
       "asset_id": "schema:packet-recipe.schema",
       "path": "schemas/v1/packet-recipe.schema.json",
       "category": "schema",
@@ -712,6 +1061,23 @@
       "last_commit": "2db0f5f1636a",
       "last_commit_date": "2026-08-04T12:36:19+00:00",
       "last_commit_subject": "feat: add configurable context-packet infrastructure"
+    },
+    {
+      "asset_id": "schema:world-manifest.schema",
+      "path": "schemas/v1/world-manifest.schema.json",
+      "category": "schema",
+      "subcategory": "extension:progressive",
+      "summary": "WorldManifest",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.progressive"
+      ],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
     },
     {
       "asset_id": "example:context_packet",
@@ -742,6 +1108,20 @@
       "last_commit_subject": "feat: add adapter-first reasoning bridge core"
     },
     {
+      "asset_id": "example:progressive_disclosure",
+      "path": "examples/progressive_disclosure.py",
+      "category": "example",
+      "subcategory": "extension:progressive",
+      "summary": "Example script `progressive_disclosure.py`",
+      "tags": [
+        "example"
+      ],
+      "related_modules": [],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
       "asset_id": "docs:context-packet-research-grounding",
       "path": "docs/context-packet-research-grounding.md",
       "category": "docs",
@@ -765,9 +1145,9 @@
         "tooling"
       ],
       "related_modules": [],
-      "last_commit": "",
-      "last_commit_date": "",
-      "last_commit_subject": ""
+      "last_commit": "3e9f94a4f81e",
+      "last_commit_date": "2026-08-04T13:00:53+00:00",
+      "last_commit_subject": "feat: add automatic bridge module and feature index"
     },
     {
       "asset_id": "docs:AGENTS",
@@ -783,15 +1163,21 @@
       "related_modules": [
         "reasoning_bridge.extensions"
       ],
-      "last_commit": "b863190710ef",
-      "last_commit_date": "2026-08-04T12:51:38+00:00",
-      "last_commit_subject": "docs: add AGENTS.md modularity rules for bridge work"
+      "last_commit": "3e9f94a4f81e",
+      "last_commit_date": "2026-08-04T13:00:53+00:00",
+      "last_commit_subject": "feat: add automatic bridge module and feature index"
     }
   ],
   "extensions": [
-    "packet"
+    "packet",
+    "progressive"
   ],
   "update_log": [
+    {
+      "commit": "3e9f94a",
+      "date": "2026-08-04T13:00:53+00:00",
+      "subject": "feat: add automatic bridge module and feature index"
+    },
     {
       "commit": "b863190",
       "date": "2026-08-04T12:51:38+00:00",

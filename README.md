@@ -85,6 +85,21 @@ Research grounding for the sparse → rich → over-specified continuum lives in
 PYTHONPATH=src python examples/context_packet.py
 ```
 
+### Progressive disclosure (optional)
+
+Manifesting + defining forces live under
+`reasoning_bridge.extensions.progressive`. Domain meaning is supplied by
+swappable `LensVocabulary` packs; operators stay domain-agnostic.
+
+```bash
+PYTHONPATH=src python examples/progressive_disclosure.py
+```
+
+Attachments:
+- `world_manifest`
+- `definition_binding`
+- `progressive_snapshot`
+
 ## Design constraints
 
 - Python 3.11+ and the standard library only.
