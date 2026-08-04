@@ -42,6 +42,17 @@ The reference extension is `reasoning_bridge.extensions.packet`
    the feature is mandatory bridge behavior.
 8. **Schemas for extension records** may live under `schemas/v1/`, but label them
    as extension protocol surfaces when relevant.
+9. **Update the bridge index** after adding or changing modules, extensions,
+   schemas, examples, docs, or tools:
+
+```bash
+python tools/bridge_index.py
+```
+
+   Read [`docs/BRIDGE_INDEX.md`](docs/BRIDGE_INDEX.md) / [`docs/bridge-index.json`](docs/bridge-index.json)
+   before inventing a new module so existing features can be reused and
+   categorized correctly. Use `python tools/bridge_index.py --check` to verify
+   the generated index is current.
 
 ### When building a new feature, ask
 
@@ -74,4 +85,16 @@ If a change only serves one domain, it belongs in an extension.
 
 ```bash
 PYTHONPATH=src python -m unittest discover -s tests -v
+python tools/bridge_index.py --check
 ```
+
+## Feature discovery
+
+Use the automatic index to find and categorize existing bridge surfaces:
+
+- Human: [`docs/BRIDGE_INDEX.md`](docs/BRIDGE_INDEX.md)
+- Machine: [`docs/bridge-index.json`](docs/bridge-index.json)
+- Generator: [`tools/bridge_index.py`](tools/bridge_index.py)
+
+The indexer classifies `core`, `extension_hook`, `extension:<name>`, schemas,
+examples, docs, and tooling, and includes recent git updates per path.

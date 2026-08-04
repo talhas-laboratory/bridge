@@ -1,0 +1,826 @@
+{
+  "generated_at": "2026-08-04T13:00:53.646581+00:00",
+  "package": "reasoning-bridge",
+  "version": "0.1.0",
+  "categories": {
+    "core": [
+      "reasoning_bridge",
+      "reasoning_bridge.adapters",
+      "reasoning_bridge.behaviors",
+      "reasoning_bridge.contracts",
+      "reasoning_bridge.policy",
+      "reasoning_bridge.routing",
+      "reasoning_bridge.runtime"
+    ],
+    "extension_hook": [
+      "reasoning_bridge.extensions"
+    ],
+    "extension": [
+      "reasoning_bridge.extensions.packet",
+      "reasoning_bridge.extensions.packet.adapters",
+      "reasoning_bridge.extensions.packet.compiler",
+      "reasoning_bridge.extensions.packet.contracts",
+      "reasoning_bridge.extensions.packet.extension"
+    ],
+    "schema": [
+      "schema:behavior-spec.schema",
+      "schema:bridge-request.schema",
+      "schema:context-packet.schema",
+      "schema:packet-recipe.schema"
+    ],
+    "example": [
+      "example:context_packet",
+      "example:custom_adapter"
+    ],
+    "docs": [
+      "docs:AGENTS",
+      "docs:context-packet-research-grounding"
+    ],
+    "tooling": [
+      "tool:bridge_index"
+    ]
+  },
+  "modules": [
+    {
+      "module_id": "reasoning_bridge",
+      "path": "src/reasoning_bridge/__init__.py",
+      "category": "core",
+      "subcategory": "package",
+      "layer": "core",
+      "summary": "A lightweight, adapter-first reasoning control plane.",
+      "exports": [
+        "ActiveField",
+        "AdapterRegistry",
+        "BehaviorRegistry",
+        "BehaviorSpec",
+        "BridgeRequest",
+        "BridgeResult",
+        "BridgeRuntime",
+        "Classification",
+        "ContextItem",
+        "ContextPolicy",
+        "ExecutionPlan",
+        "ExtensionContribution",
+        "InMemoryContextProvider",
+        "PlanExtension",
+        "RouteDecision"
+      ],
+      "symbols": [],
+      "tags": [
+        "core"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.adapters",
+      "path": "src/reasoning_bridge/adapters.py",
+      "category": "core",
+      "subcategory": "adapters",
+      "layer": "core",
+      "summary": "Narrow adapter protocols and dependency-free reference adapters.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "ClassifierPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.ClassifierPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ContextProviderPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.ContextProviderPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ExecutorPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.ExecutorPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "LearningPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.LearningPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "TelemetryPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.TelemetryPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "AdapterRegistry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.AdapterRegistry",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "InMemoryContextProvider",
+          "kind": "class",
+          "qualname": "reasoning_bridge.adapters.InMemoryContextProvider",
+          "bases": [],
+          "docstring": "Reference adapter useful for tests, examples, and host conformance work."
+        }
+      ],
+      "tags": [
+        "adapter-port",
+        "core",
+        "registry"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.behaviors",
+      "path": "src/reasoning_bridge/behaviors.py",
+      "category": "core",
+      "subcategory": "behaviors",
+      "layer": "core",
+      "summary": "Data-backed behavior registration and deterministic matching.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "BehaviorRegistry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.behaviors.BehaviorRegistry",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "core",
+        "registry"
+      ],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "module_id": "reasoning_bridge.contracts",
+      "path": "src/reasoning_bridge/contracts.py",
+      "category": "core",
+      "subcategory": "contracts",
+      "layer": "core",
+      "summary": "Versioned, JSON-compatible records exposed by the bridge core.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "PROTOCOL_VERSION",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.contracts.PROTOCOL_VERSION",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "JsonRecord",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.JsonRecord",
+          "bases": [],
+          "docstring": "Small serialization base that keeps public records language-neutral."
+        },
+        {
+          "name": "BridgeRequest",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.BridgeRequest",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ContextPolicy",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.ContextPolicy",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "BehaviorSpec",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.BehaviorSpec",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "Classification",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.Classification",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ContextItem",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.ContextItem",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ActiveField",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.ActiveField",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "RouteDecision",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.RouteDecision",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ExecutionPlan",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.ExecutionPlan",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "BridgeResult",
+          "kind": "class",
+          "qualname": "reasoning_bridge.contracts.BridgeResult",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "contract",
+        "core",
+        "policy"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions",
+      "path": "src/reasoning_bridge/extensions/__init__.py",
+      "category": "extension_hook",
+      "subcategory": "plan_extension",
+      "layer": "extensions",
+      "summary": "Optional plan-time extension hooks for the bridge core.",
+      "exports": [
+        "ExtensionContribution",
+        "PlanExtension"
+      ],
+      "symbols": [
+        {
+          "name": "ExtensionContribution",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.ExtensionContribution",
+          "bases": [],
+          "docstring": "Named artifacts and diagnostics an extension may attach to a plan."
+        },
+        {
+          "name": "PlanExtension",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.PlanExtension",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": "Modular add-on invoked during planning after core context resolution."
+        }
+      ],
+      "tags": [
+        "extension",
+        "hook",
+        "plan-extension"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.packet",
+      "path": "src/reasoning_bridge/extensions/packet/__init__.py",
+      "category": "extension",
+      "subcategory": "packet.package",
+      "layer": "extension:packet",
+      "summary": "Context-packet assembly as an optional bridge extension.",
+      "exports": [
+        "CONTEXT_PACKET_ATTACHMENT",
+        "ContextPacket",
+        "ContextPacketExtension",
+        "DefaultPacketCompiler",
+        "DensityReport",
+        "FacetMaterial",
+        "FacetProviderPort",
+        "InMemoryFacetProvider",
+        "PacketCompilerPort",
+        "PacketRecipe",
+        "PacketSection",
+        "PacketSlotSpec",
+        "RecipeRegistry",
+        "SourceBinding",
+        "context_items_to_materials"
+      ],
+      "symbols": [],
+      "tags": [
+        "extension",
+        "packet"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.packet.adapters",
+      "path": "src/reasoning_bridge/extensions/packet/adapters.py",
+      "category": "extension",
+      "subcategory": "packet.adapters",
+      "layer": "extension:packet",
+      "summary": "Adapter ports owned by the optional context-packet extension.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "FacetProviderPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.adapters.FacetProviderPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "PacketCompilerPort",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.adapters.PacketCompilerPort",
+          "bases": [
+            "Protocol"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "InMemoryFacetProvider",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.adapters.InMemoryFacetProvider",
+          "bases": [],
+          "docstring": "Reference facet source for packet compilation tests and host scaffolding."
+        }
+      ],
+      "tags": [
+        "adapter-port",
+        "extension",
+        "packet"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.packet.compiler",
+      "path": "src/reasoning_bridge/extensions/packet/compiler.py",
+      "category": "extension",
+      "subcategory": "packet.compiler",
+      "layer": "extension:packet",
+      "summary": "Declarative context-packet recipes and a deterministic default compiler.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "RecipeRegistry",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.compiler.RecipeRegistry",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "context_items_to_materials",
+          "kind": "function",
+          "qualname": "reasoning_bridge.extensions.packet.compiler.context_items_to_materials",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "DefaultPacketCompiler",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.compiler.DefaultPacketCompiler",
+          "bases": [],
+          "docstring": "Deterministic compiler: select \u2192 rank \u2192 budget \u2192 render."
+        }
+      ],
+      "tags": [
+        "extension",
+        "packet",
+        "recipe",
+        "registry"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.packet.contracts",
+      "path": "src/reasoning_bridge/extensions/packet/contracts.py",
+      "category": "extension",
+      "subcategory": "packet.contracts",
+      "layer": "extension:packet",
+      "summary": "Contracts owned by the optional context-packet extension.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "FacetMaterial",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.FacetMaterial",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Normalized claim that any source adapter can emit into the compiler."
+        },
+        {
+          "name": "PacketSlotSpec",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.PacketSlotSpec",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "SourceBinding",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.SourceBinding",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Declarative mapping from a packet slot to a named source selector."
+        },
+        {
+          "name": "PacketRecipe",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.PacketRecipe",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Configurable blueprint for compiling an activation-oriented context packet."
+        },
+        {
+          "name": "PacketSection",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.PacketSection",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "DensityReport",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.DensityReport",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": ""
+        },
+        {
+          "name": "ContextPacket",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.contracts.ContextPacket",
+          "bases": [
+            "JsonRecord"
+          ],
+          "docstring": "Compiled activation object: structural grounding without over-prompting."
+        }
+      ],
+      "tags": [
+        "contract",
+        "extension",
+        "packet",
+        "recipe"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.extensions.packet.extension",
+      "path": "src/reasoning_bridge/extensions/packet/extension.py",
+      "category": "extension",
+      "subcategory": "packet.extension",
+      "layer": "extension:packet",
+      "summary": "Plan-time extension that compiles context packets without coupling the core.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "CONTEXT_PACKET_ATTACHMENT",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.extensions.packet.extension.CONTEXT_PACKET_ATTACHMENT",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "ContextPacketExtension",
+          "kind": "class",
+          "qualname": "reasoning_bridge.extensions.packet.extension.ContextPacketExtension",
+          "bases": [],
+          "docstring": "Optional add-on: recipe selection + facet collection + packet compilation."
+        }
+      ],
+      "tags": [
+        "extension",
+        "packet",
+        "plan-extension"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "module_id": "reasoning_bridge.policy",
+      "path": "src/reasoning_bridge/policy.py",
+      "category": "core",
+      "subcategory": "policy",
+      "layer": "core",
+      "summary": "Policy normalization and capability-safe defaults.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "normalize_policy",
+          "kind": "function",
+          "qualname": "reasoning_bridge.policy.normalize_policy",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "core",
+        "policy"
+      ],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "module_id": "reasoning_bridge.routing",
+      "path": "src/reasoning_bridge/routing.py",
+      "category": "core",
+      "subcategory": "routing",
+      "layer": "core",
+      "summary": "Deterministic route selection from activated behaviors.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "DEFAULT_ROUTE",
+          "kind": "constant",
+          "qualname": "reasoning_bridge.routing.DEFAULT_ROUTE",
+          "bases": [],
+          "docstring": ""
+        },
+        {
+          "name": "resolve_route",
+          "kind": "function",
+          "qualname": "reasoning_bridge.routing.resolve_route",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "core"
+      ],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "module_id": "reasoning_bridge.runtime",
+      "path": "src/reasoning_bridge/runtime.py",
+      "category": "core",
+      "subcategory": "runtime",
+      "layer": "core",
+      "summary": "Small orchestration runtime with explicit, policy-gated adapter calls.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "BridgeRuntime",
+          "kind": "class",
+          "qualname": "reasoning_bridge.runtime.BridgeRuntime",
+          "bases": [],
+          "docstring": ""
+        }
+      ],
+      "tags": [
+        "core",
+        "runtime"
+      ],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    }
+  ],
+  "assets": [
+    {
+      "asset_id": "schema:behavior-spec.schema",
+      "path": "schemas/v1/behavior-spec.schema.json",
+      "category": "schema",
+      "subcategory": "core",
+      "summary": "BehaviorSpec",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.contracts"
+      ],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "asset_id": "schema:bridge-request.schema",
+      "path": "schemas/v1/bridge-request.schema.json",
+      "category": "schema",
+      "subcategory": "core",
+      "summary": "BridgeRequest",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.contracts"
+      ],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "asset_id": "schema:context-packet.schema",
+      "path": "schemas/v1/context-packet.schema.json",
+      "category": "schema",
+      "subcategory": "extension:packet",
+      "summary": "ContextPacket",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.packet"
+      ],
+      "last_commit": "2db0f5f1636a",
+      "last_commit_date": "2026-08-04T12:36:19+00:00",
+      "last_commit_subject": "feat: add configurable context-packet infrastructure"
+    },
+    {
+      "asset_id": "schema:packet-recipe.schema",
+      "path": "schemas/v1/packet-recipe.schema.json",
+      "category": "schema",
+      "subcategory": "extension:packet",
+      "summary": "PacketRecipe",
+      "tags": [
+        "schema",
+        "protocol"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions.packet"
+      ],
+      "last_commit": "2db0f5f1636a",
+      "last_commit_date": "2026-08-04T12:36:19+00:00",
+      "last_commit_subject": "feat: add configurable context-packet infrastructure"
+    },
+    {
+      "asset_id": "example:context_packet",
+      "path": "examples/context_packet.py",
+      "category": "example",
+      "subcategory": "extension:packet",
+      "summary": "Example script `context_packet.py`",
+      "tags": [
+        "example"
+      ],
+      "related_modules": [],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "asset_id": "example:custom_adapter",
+      "path": "examples/custom_adapter.py",
+      "category": "example",
+      "subcategory": "core",
+      "summary": "Example script `custom_adapter.py`",
+      "tags": [
+        "example"
+      ],
+      "related_modules": [],
+      "last_commit": "54e94b9a95b5",
+      "last_commit_date": "2026-07-23T18:29:49+02:00",
+      "last_commit_subject": "feat: add adapter-first reasoning bridge core"
+    },
+    {
+      "asset_id": "docs:context-packet-research-grounding",
+      "path": "docs/context-packet-research-grounding.md",
+      "category": "docs",
+      "subcategory": "extension:packet",
+      "summary": "Context Packet Research Grounding",
+      "tags": [
+        "docs"
+      ],
+      "related_modules": [],
+      "last_commit": "594878134ef6",
+      "last_commit_date": "2026-08-04T12:50:00+00:00",
+      "last_commit_subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "asset_id": "tool:bridge_index",
+      "path": "tools/bridge_index.py",
+      "category": "tooling",
+      "subcategory": "index",
+      "summary": "Automatic bridge module/feature indexer. Scans the repository, categorizes core vs extension surfaces, and writes: - docs/bridge-index.json (machine-readable) - docs/BRIDGE_INDEX.md (human-readable) Stdlib only. Safe to run without network. Prefer regenerating after any feature, extension, schema, or example change.",
+      "tags": [
+        "tooling"
+      ],
+      "related_modules": [],
+      "last_commit": "",
+      "last_commit_date": "",
+      "last_commit_subject": ""
+    },
+    {
+      "asset_id": "docs:AGENTS",
+      "path": "AGENTS.md",
+      "category": "docs",
+      "subcategory": "agent-guidance",
+      "summary": "Agent working rules for modular bridge development",
+      "tags": [
+        "docs",
+        "agents",
+        "modularity"
+      ],
+      "related_modules": [
+        "reasoning_bridge.extensions"
+      ],
+      "last_commit": "b863190710ef",
+      "last_commit_date": "2026-08-04T12:51:38+00:00",
+      "last_commit_subject": "docs: add AGENTS.md modularity rules for bridge work"
+    }
+  ],
+  "extensions": [
+    "packet"
+  ],
+  "update_log": [
+    {
+      "commit": "b863190",
+      "date": "2026-08-04T12:51:38+00:00",
+      "subject": "docs: add AGENTS.md modularity rules for bridge work"
+    },
+    {
+      "commit": "5948781",
+      "date": "2026-08-04T12:50:00+00:00",
+      "subject": "refactor: make context packets an optional plan extension"
+    },
+    {
+      "commit": "5de3c19",
+      "date": "2026-08-04T12:46:06+00:00",
+      "subject": "docs: add research grounding for context-packet design"
+    },
+    {
+      "commit": "2db0f5f",
+      "date": "2026-08-04T12:36:19+00:00",
+      "subject": "feat: add configurable context-packet infrastructure"
+    },
+    {
+      "commit": "5dbeda4",
+      "date": "2026-07-23T18:30:01+02:00",
+      "subject": "chore: ignore generated Python artifacts"
+    },
+    {
+      "commit": "54e94b9",
+      "date": "2026-07-23T18:29:49+02:00",
+      "subject": "feat: add adapter-first reasoning bridge core"
+    }
+  ]
+}

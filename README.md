@@ -98,4 +98,18 @@ PYTHONPATH=src python examples/context_packet.py
 Agent working rules for preserving this modularity are in
 [`AGENTS.md`](AGENTS.md).
 
+## Feature index
+
+An automatic catalog of modules, extensions, schemas, examples, and recent
+updates is maintained at:
+
+- [`docs/BRIDGE_INDEX.md`](docs/BRIDGE_INDEX.md)
+- [`docs/bridge-index.json`](docs/bridge-index.json)
+
+Regenerate after structural changes:
+
+```bash
+python tools/bridge_index.py
+```
+
 The schema files under `schemas/v1/` are the language-neutral protocol surface.
