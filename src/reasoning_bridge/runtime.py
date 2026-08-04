@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from dataclasses import asdict
 from hashlib import sha256
 from typing import Any
 
@@ -16,6 +15,7 @@ from .contracts import (
     Classification,
     ExecutionPlan,
 )
+from .extensions import ExtensionContribution, PlanExtension
 from .policy import normalize_policy
 from .routing import resolve_route
 
@@ -38,15 +38,50 @@ def _plan_id(request_id: str, route_id: str) -> str:
     return f"plan-{digest}"
 
 
+def _run_extensions(
+    extensions: tuple[PlanExtension, ...],
+    *,
+    request: BridgeRequest,
+    policy: Any,
+    classification: Classification,
+    context: tuple[Any, ...],
+) -> ExtensionContribution:
+    attachments: dict[str, Any] = {}
+    warnings: list[str] = []
+    trace: list[dict[str, Any]] = []
+    for extension in extensions:
+        try:
+            contribution = extension.contribute(
+                request=request,
+                policy=policy,
+                classification=classification,
+                context=context,
+            )
+        except Exception as exc:  # extensions are trust boundaries
+            warnings.append(f"extension_failed:{extension.extension_id}:{type(exc).__name__}")
+            trace.append({"event": "extension_failed", "extension_id": extension.extension_id})
+            continue
+        attachments.update(contribution.attachments)
+        warnings.extend(contribution.warnings)
+        trace.extend(dict(item) for item in contribution.trace)
+    return ExtensionContribution(
+        attachments=attachments,
+        warnings=tuple(warnings),
+        trace=tuple(trace),
+    )
+
+
 class BridgeRuntime:
     def __init__(
         self,
         *,
         behaviors: tuple[Any, ...] | list[Any] = (),
         adapters: AdapterRegistry | None = None,
+        extensions: tuple[PlanExtension, ...] | list[PlanExtension] = (),
     ) -> None:
         self.behaviors = BehaviorRegistry(behaviors)
         self.adapters = adapters or AdapterRegistry()
+        self.extensions: tuple[PlanExtension, ...] = tuple(extensions)
 
     def plan(self, request: BridgeRequest) -> BridgeResult:
         policy = normalize_policy(request.policy)
@@ -69,6 +104,16 @@ class BridgeRuntime:
                 warnings.append(f"context_provider_failed:{type(exc).__name__}")
         trace.append({"event": "context_resolved", "item_count": len(context)})
 
+        contribution = _run_extensions(
+            self.extensions,
+            request=request,
+            policy=policy,
+            classification=classification,
+            context=context,
+        )
+        warnings.extend(contribution.warnings)
+        trace.extend(dict(item) for item in contribution.trace)
+
         behaviors, evidence = self.behaviors.match(classification.signals)
         field = ActiveField(
             signals=classification.signals,
@@ -77,6 +122,7 @@ class BridgeRuntime:
             constraints=request.constraints,
             context=context,
             confidence=classification.confidence,
+            extensions=contribution.attachments,
         )
         route = resolve_route(behaviors, confidence=classification.confidence)
         directives = tuple(directive for behavior in behaviors for directive in behavior.directives)

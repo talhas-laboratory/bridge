@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reasoning-bridge.dev/schemas/v1/definition-binding.schema.json",
+  "title": "DefinitionBinding",
+  "type": "object",
+  "required": ["binding_id", "manifest_id", "lens_id", "state_key"],
+  "properties": {
+    "binding_id": {"type": "string", "minLength": 1},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "lens_id": {"type": "string", "minLength": 1},
+    "state_key": {"type": "string", "minLength": 1},
+    "request_id": {"type": "string"},
+    "definitions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/DefinitionEntry"}
+    },
+    "deferred": {"type": "array", "items": {"type": "string"}},
+    "active": {"type": "array", "items": {"type": "string"}},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "DefinitionEntry": {
+      "type": "object",
+      "required": ["constituent_id", "claim"],
+      "properties": {
+        "constituent_id": {"type": "string", "minLength": 1},
+        "claim": {"type": "string"},
+        "lock_level": {"enum": ["locked", "preferred", "suggestive", "open"]},
+        "provenance": {"type": "string"},
+        "stereotype_risk": {"type": "number"},
+        "metadata": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

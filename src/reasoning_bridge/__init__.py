@@ -13,6 +13,7 @@ from .contracts import (
     ExecutionPlan,
     RouteDecision,
 )
+from .extensions import ExtensionContribution, PlanExtension
 from .runtime import BridgeRuntime
 
 __all__ = [
@@ -27,6 +28,8 @@ __all__ = [
     "ContextItem",
     "ContextPolicy",
     "ExecutionPlan",
+    "ExtensionContribution",
     "InMemoryContextProvider",
+    "PlanExtension",
     "RouteDecision",
 ]

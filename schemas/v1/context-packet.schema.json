@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reasoning-bridge.dev/schemas/v1/context-packet.schema.json",
+  "title": "ContextPacket",
+  "type": "object",
+  "required": ["packet_id", "recipe_id"],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 1},
+    "recipe_id": {"type": "string", "minLength": 1},
+    "activation_goal": {"type": "string"},
+    "request_id": {"type": "string"},
+    "sections": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/PacketSection"}
+    },
+    "locked_variables": {"type": "array", "items": {"type": "string"}},
+    "open_variables": {"type": "array", "items": {"type": "string"}},
+    "density": {"$ref": "#/$defs/DensityReport"},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "PacketSection": {
+      "type": "object",
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "enum": [
+            "frame",
+            "identity",
+            "constraints",
+            "evidence",
+            "examples",
+            "open_vars",
+            "anti_caricature"
+          ]
+        },
+        "materials": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/FacetMaterial"}
+        },
+        "required": {"type": "boolean"},
+        "rendered": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "FacetMaterial": {
+      "type": "object",
+      "required": ["facet_id", "claim"],
+      "properties": {
+        "facet_id": {"type": "string", "minLength": 1},
+        "claim": {"type": "string"},
+        "role_hint": {
+          "enum": [
+            "frame",
+            "identity",
+            "constraints",
+            "evidence",
+            "examples",
+            "open_vars",
+            "anti_caricature"
+          ]
+        },
+        "lock_level": {"enum": ["locked", "preferred", "suggestive", "open"]},
+        "confidence": {"type": "number"},
+        "salience": {"type": "number"},
+        "provenance": {"type": "string"},
+        "scope": {"type": "string"},
+        "stereotype_risk": {"type": "number"},
+        "metadata": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "DensityReport": {
+      "type": "object",
+      "properties": {
+        "profile": {"enum": ["sparse", "balanced", "dense"]},
+        "coverage": {"type": "number"},
+        "openness": {"type": "number"},
+        "used_characters": {"type": "integer", "minimum": 0},
+        "used_items": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  }
+}

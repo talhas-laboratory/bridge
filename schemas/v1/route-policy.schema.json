@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reasoning-bridge.dev/schemas/v1/route-policy.schema.json",
+  "title": "RoutePolicy",
+  "type": "object",
+  "required": ["policy_id", "rules"],
+  "properties": {
+    "policy_id": {"type": "string", "minLength": 1},
+    "rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/RouteRule"}
+    },
+    "graph_edges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/GraphEdge"}
+    },
+    "default_configuration": {"$ref": "https://reasoning-bridge.dev/schemas/v1/context-configuration.schema.json"},
+    "selection_signals": {"type": "array", "items": {"type": "string"}},
+    "priority": {"type": "integer"},
+    "description": {"type": "string"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "RouteRule": {
+      "type": "object",
+      "required": ["rule_id", "configuration"],
+      "properties": {
+        "rule_id": {"type": "string", "minLength": 1},
+        "priority": {"type": "integer"},
+        "match_all": {"type": "object", "additionalProperties": {"type": "string"}},
+        "match_any": {"type": "object", "additionalProperties": {"type": "string"}},
+        "configuration": {"$ref": "https://reasoning-bridge.dev/schemas/v1/context-configuration.schema.json"},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "GraphEdge": {
+      "type": "object",
+      "required": ["from_id", "to_id"],
+      "properties": {
+        "from_id": {"type": "string"},
+        "to_id": {"type": "string"},
+        "relation": {"type": "string"},
+        "weight": {"type": "number"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

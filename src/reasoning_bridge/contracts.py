@@ -90,6 +90,7 @@ class ActiveField(JsonRecord):
     constraints: tuple[str, ...]
     context: tuple[ContextItem, ...]
     confidence: float
+    extensions: Mapping[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)

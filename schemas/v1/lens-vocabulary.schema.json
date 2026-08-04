@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reasoning-bridge.dev/schemas/v1/lens-vocabulary.schema.json",
+  "title": "LensVocabulary",
+  "type": "object",
+  "required": ["lens_id", "domain", "kinds"],
+  "properties": {
+    "lens_id": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "kinds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/ConstituentKindSpec"}
+    },
+    "selection_signals": {"type": "array", "items": {"type": "string"}},
+    "priority": {"type": "integer"},
+    "max_manifest": {"type": "integer", "minimum": 0},
+    "max_definitions": {"type": "integer", "minimum": 0},
+    "description": {"type": "string"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "ConstituentKindSpec": {
+      "type": "object",
+      "required": ["kind_id"],
+      "properties": {
+        "kind_id": {"type": "string", "minLength": 1},
+        "label": {"type": "string"},
+        "description": {"type": "string"},
+        "default_role_hint": {"type": "string"},
+        "requires_definition_default": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
