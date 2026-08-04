@@ -95,4 +95,7 @@ PYTHONPATH=src python examples/context_packet.py
   hidden fallbacks.
 - Domain features should be extensions; the core stays multi-function.
 
+Agent working rules for preserving this modularity are in
+[`AGENTS.md`](AGENTS.md).
+
 The schema files under `schemas/v1/` are the language-neutral protocol surface.
